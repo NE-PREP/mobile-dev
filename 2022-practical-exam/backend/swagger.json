@@ -1,0 +1,434 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A system that helps NEC to carry out elections.\n\nMade with ❤️ by Nkubito Pacis",
+        "title": "NEC Voting System",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Nkubito Pacis",
+            "email": "pacisnkubito@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "tags": [
+        {
+            "name": "USER OPERATIONS",
+            "description": "Operations on users"
+        },
+        {
+            "name": "CANDIDATE OPERATIONS",
+            "description": "Operations on candidates"
+        },
+        {
+            "name": "VOTING OPERATIONS",
+            "description": "Operations on voting"
+        }  
+    ],
+    "security": [
+        {
+            "Bearer": []
+        }
+    ],
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "auth-token",
+            "in": "header",
+            "bearerFormat": "JWT",
+            "scheme": "bearer"
+        }
+    },
+    "paths": {
+        "/users/login": {
+            "post": {
+                "tags": [
+                    "USER OPERATIONS"
+                ],
+                "summary": "Login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "type": "object",
+                        "consumes": "application/json",
+                        "properties": {
+                            "email": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "password": {
+                                "type": "string",
+                                "required": "true"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/admin/register": {
+            "post": {
+                "tags": [
+                    "USER OPERATIONS"
+                ],
+                "summary": "Register as an admin",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "type": "object",
+                        "consumes": "application/json",
+                        "properties": {
+                            "firstname": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "lastname": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "phone": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "email": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "nationalId": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "password": {
+                                "type": "string",
+                                "required": "true"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/voter/register": {
+            "post": {
+                "tags": [
+                    "USER OPERATIONS"
+                ],
+                "summary": "Register as a voter",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "type": "object",
+                        "consumes": "application/json",
+                        "properties": {
+                            "firstname": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "lastname": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "phone": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "email": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "nationalId": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "password": {
+                                "type": "string",
+                                "required": "true"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/profile": {
+            "get": {
+                "tags": [
+                    "USER OPERATIONS"
+                ],
+                "summary": "Get user profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/candidates/as-voter": {
+            "get": {
+                "tags": [
+                    "CANDIDATE OPERATIONS"
+                ],
+                "summary": "Get candidates as a voter",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/candidates/as-admin": {
+            "get": {
+                "tags": [
+                    "CANDIDATE OPERATIONS"
+                ],
+                "summary": "Get candidates as an admin",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/candidates/register": {
+            "post": {
+                "tags": [
+                    "CANDIDATE OPERATIONS"
+                ],
+                "summary": "Register a candidate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "type": "object",
+                        "consumes": "application/json",
+                        "properties": {
+                            "firstname": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "lastname": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "nationalId": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "profilePicture": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "missionStatement": {
+                                "type": "string",
+                                "required": "true"
+                            },
+                            "gender": {
+                                "type": "string",
+                                "enum": [
+                                    "MALE",
+                                    "FEMALE"
+                                ],
+                                "required": "true"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/candidates/vote": {
+            "post": {
+                "tags": [
+                    "VOTING OPERATIONS"
+                ],
+                "summary": "Vote a candidate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "type": "object",
+                        "consumes": "application/json",
+                        "properties": {
+                            "candidateId": {
+                                "type": "string",
+                                "required": "true",
+                                "format": "uuid"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/has-voted": {
+            "get": {
+                "tags": [
+                    "VOTING OPERATIONS"
+                ],
+                "summary": "Check if user has voted",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    }
+}
