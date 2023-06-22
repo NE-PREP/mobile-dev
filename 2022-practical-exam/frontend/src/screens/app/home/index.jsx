@@ -5,12 +5,14 @@ import {
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import tw from "twrnc";
 import { Button, Card, Paragraph } from "react-native-paper";
 import API_URL, { sendRequest } from "../../../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
+import Spinner from "../../../components/spinner";
 
 const Home = ({ navigation }) => {
   const [user, setUser] = useState("");
@@ -34,8 +36,10 @@ const Home = ({ navigation }) => {
   };
 
   const loadData = async () => {
+    setLoading(true);
     await getCandidates();
     await checkIfUserHasVoted();
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -69,59 +73,99 @@ const Home = ({ navigation }) => {
         <ScrollView>
           <View style={tw`flex items-end pr-4 mb-4`}>
             <TouchableOpacity onPress={handleLogout}>
-              <MaterialIcons name="logout" size={29} color="red" />
+              <MaterialIcons name="logout" size={37} color="red" />
             </TouchableOpacity>
           </View>
 
           <View style={tw`items-center`}>
-            <Text style={tw`text-[#2272C3] font-bold text-xl text-center`}>
+            <Text
+              style={[
+                styles.textBold,
+                tw`text-[#2272C3] font-bold text-2xl text-center`,
+              ]}
+            >
               Welcome to NEC Voting System
             </Text>
 
-            <Text style={tw`text-[#cccbca] text-base text-center mb-10`}>
+            <Text
+              style={tw`text-[#b5b4b3] text-xl text-center mb-10`}
+              className={styles.text}
+            >
               {user?.firstname + " " + user?.lastname}
             </Text>
 
-            {candidates?.map((el) => (
-              <View key={el?.candidate?._id} style={tw`mb-4 w-[80]`}>
-                <Card>
-                  {el?.candidate?.profilePicture &&
-                  el?.candidate?.profilePicture !== "" ? (
-                    <Card.Cover source={{ uri: el.candidate.profilePicture }} />
-                  ) : (
-                    <View></View>
-                  )}
+            {loading ? (
+              <Spinner />
+            ) : (
+              <View>
+                {candidates?.map((el) => (
+                  <View key={el?.candidate?._id} style={tw`mb-[5%] w-[100]`}>
+                    <Card>
+                      {el?.candidate?.profilePicture &&
+                      el?.candidate?.profilePicture !== "" ? (
+                        <Card.Cover
+                          source={{ uri: el.candidate.profilePicture }}
+                        />
+                      ) : (
+                        <View></View>
+                      )}
 
-                  <Card.Title
-                    title={
-                      el?.candidate?.firstname + " " + el?.candidate?.lastname
-                    }
-                    subtitle={
-                      <Text>{el?.votes != null && el?.votes + " votes"}</Text>
-                    }
-                  />
-                  <Card.Content>
-                    <Paragraph>{el?.candidate?.missionStatement}</Paragraph>
-                  </Card.Content>
-                  {!hasUserVoted && (
-                    <Card.Actions>
-                      <Button
-                        onPress={() => {
-                          handleVote(el?.candidate?._id);
-                        }}
-                      >
-                        {loading ? "Voting..." : "Vote"}
-                      </Button>
-                    </Card.Actions>
-                  )}
-                </Card>
+                      <Card.Title
+                        title={
+                          el?.candidate?.firstname +
+                          " " +
+                          el?.candidate?.lastname
+                        }
+                        subtitle={
+                          <Text>
+                            {el?.votes != null && el?.votes + " votes"}
+                          </Text>
+                        }
+                        titleStyle={[
+                          styles.textBold,
+                          tw`text-[#2272C3] font-bold text-lg`,
+                        ]}
+                        subtitleStyle={tw`text-[#a8a8a8] text-base`}
+                      />
+                      <Card.Content>
+                        <Paragraph style={[styles.text, tw`mb-3 text-base`]}>
+                          {el?.candidate?.missionStatement}
+                        </Paragraph>
+                      </Card.Content>
+                      {!hasUserVoted && (
+                        <Card.Actions>
+                          <Button
+                            style={styles.button}
+                            onPress={() => {
+                              handleVote(el?.candidate?._id);
+                            }}
+                          >
+                            {loading ? "Voting..." : "Vote"}
+                          </Button>
+                        </Card.Actions>
+                      )}
+                    </Card>
+                  </View>
+                ))}
               </View>
-            ))}
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: "Poppins-Regular",
+  },
+  textBold: {
+    fontFamily: "Poppins-Bold",
+  },
+  button: {
+    borderColor: "#2272C3"
+  }
+});
 
 export default Home;
