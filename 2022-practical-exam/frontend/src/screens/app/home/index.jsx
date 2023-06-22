@@ -20,7 +20,6 @@ const Home = ({ navigation }) => {
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasUserVoted, setHasUserVoted] = useState(false);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
 
   const getUserProfile = async () => {
     const profile = await sendRequest(API_URL + "/users/profile", "GET");
@@ -56,25 +55,26 @@ const Home = ({ navigation }) => {
   };
 
   const handleVote = async (candidate) => {
-    setSelectedCandidate(candidate);
     Alert.alert(
       "Confirmation",
       `Do you want to vote for ${candidate?.firstname} ${candidate?.lastname}?`,
       [
         { text: "Cancel", style: "destructive", },
-        { text: "Vote", onPress: confirmVote, style: "cancel"},
+        {
+          text: "Vote",
+          onPress: () => confirmVote(candidate),
+          style: "cancel",
+        },
       ],
       { cancelable: true }
     );
   };
 
-  const confirmVote = async () => {
+  const confirmVote = async (candidate) => {
     setLoading(true);
-    if(selectedCandidate == null) return;
-    console.log(selectedCandidate)
     try {
       await sendRequest(API_URL + "/candidates/vote", "POST", {
-        candidateId: selectedCandidate?._id,
+        candidateId: candidate?._id,
       });
       setLoading(false);
     } catch (error) {
