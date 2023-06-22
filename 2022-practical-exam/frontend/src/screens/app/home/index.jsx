@@ -70,6 +70,7 @@ const Home = ({ navigation }) => {
 
   const confirmVote = async () => {
     setLoading(true);
+    if(selectedCandidate == null) return;
     console.log(selectedCandidate)
     try {
       await sendRequest(API_URL + "/candidates/vote", "POST", {
