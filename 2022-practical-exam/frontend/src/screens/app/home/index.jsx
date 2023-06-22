@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import tw from "twrnc";
 import { Button, Card, Paragraph } from "react-native-paper";
@@ -19,6 +20,7 @@ const Home = ({ navigation }) => {
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasUserVoted, setHasUserVoted] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
 
   const getUserProfile = async () => {
     const profile = await sendRequest(API_URL + "/users/profile", "GET");
@@ -54,10 +56,24 @@ const Home = ({ navigation }) => {
   };
 
   const handleVote = async (candidate) => {
+    setSelectedCandidate(candidate);
+    Alert.alert(
+      "Confirmation",
+      `Do you want to vote for ${candidate?.firstname} ${candidate?.lastname}?`,
+      [
+        { text: "Cancel", style: "destructive", },
+        { text: "Vote", onPress: confirmVote, style: "cancel"},
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const confirmVote = async () => {
     setLoading(true);
+    console.log(selectedCandidate)
     try {
       await sendRequest(API_URL + "/candidates/vote", "POST", {
-        candidateId: candidate,
+        candidateId: selectedCandidate?._id,
       });
       setLoading(false);
     } catch (error) {
@@ -67,6 +83,7 @@ const Home = ({ navigation }) => {
     await loadData();
   };
 
+  
   return (
     <View style={tw`h-full pt-20`}>
       <SafeAreaView>
@@ -91,7 +108,7 @@ const Home = ({ navigation }) => {
               style={tw`text-[#b5b4b3] text-xl text-center mb-10`}
               className={styles.text}
             >
-              {user?.firstname + " " + user?.lastname}
+              {(user?.firstname || "") + " " + (user?.lastname || "")}
             </Text>
 
             {loading ? (
@@ -135,10 +152,12 @@ const Home = ({ navigation }) => {
                       {!hasUserVoted && (
                         <Card.Actions>
                           <Button
-                            style={styles.button}
+                            style={[styles.button,tw`w-[100%] font-bold`]}
+                            labelStyle={styles.button}
                             onPress={() => {
-                              handleVote(el?.candidate?._id);
+                              handleVote(el?.candidate);
                             }}
+                            textColor="#2272C3"
                           >
                             {loading ? "Voting..." : "Vote"}
                           </Button>
@@ -164,7 +183,9 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Bold",
   },
   button: {
-    borderColor: "#2272C3"
+    borderColor: "#2272C3",
+    fontSize: 17,
+    fontFamily: "Poppins-Bold",
   }
 });
 

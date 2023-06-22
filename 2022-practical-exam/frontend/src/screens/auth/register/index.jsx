@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Text, SafeAreaView, ScrollView, View, TouchableOpacity } from "react-native";
+import {
+  Text,
+  SafeAreaView,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { MaterialIcons, Feather, AntDesign } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -19,12 +26,14 @@ const SignUp = ({ navigation }) => {
       placeholder: "Firstname",
       value: "firstname",
       secure: false,
+      required: true,
     },
     {
       icon: <MaterialIcons name="person-outline" size={24} color="silver" />,
       placeholder: "Lastname",
       value: "lastname",
       secure: false,
+      required: true,
     },
     {
       icon: <MaterialIcons name="smartphone" size={24} color="silver" />,
@@ -32,6 +41,7 @@ const SignUp = ({ navigation }) => {
       value: "phone",
       secure: false,
       type: "number-pad",
+      required: true,
     },
     {
       icon: <AntDesign name="idcard" size={24} color="silver" />,
@@ -39,6 +49,7 @@ const SignUp = ({ navigation }) => {
       value: "nationalId",
       secure: false,
       type: "number-pad",
+      required: true,
     },
     {
       icon: <Feather name="mail" size={24} color="silver" />,
@@ -46,12 +57,14 @@ const SignUp = ({ navigation }) => {
       value: "email",
       secure: false,
       type: "email-address",
+      required: true,
     },
     {
       icon: <Feather name="lock" size={24} color="silver" />,
       placeholder: "Password",
       value: "password",
       secure: true,
+      required: true,
     },
   ];
 
@@ -63,10 +76,20 @@ const SignUp = ({ navigation }) => {
   const validationSchema = Yup.object().shape({
     firstname: Yup.string().required("Firstname is required"),
     lastname: Yup.string().required("Lastname is required"),
-    phone: Yup.string().required("Phone is required").min(10).max(10),
-    nationalId: Yup.string().required("NationalId is required").min(16).max(16),
+    phone: Yup.string()
+      .matches(/^\d+$/, "Phone must contain only numerical characters")
+      .required("Phone is required")
+      .min(10, "Phone must be 10 characters")
+      .max(10, "Phone must be 10 characters"),
+    nationalId: Yup.string()
+      .matches(/^\d+$/, "National id must contain only numerical characters")
+      .required("NationalId is required")
+      .min(16, "National id must be 16 characters")
+      .max(16, "National id must be 16 characters"),
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(6, "Password must be 6 characters"),
   });
 
   const formik = useFormik({
@@ -74,12 +97,26 @@ const SignUp = ({ navigation }) => {
     validationSchema,
   });
 
-  const { handleChange, handleBlur, values, errors, touched,resetForm } = formik;
+  const { handleChange, handleBlur, values, errors, touched, resetForm } =
+    formik;
 
   const handleSubmit = async () => {
-    setLoading(true);
-    setError("");
     try {
+      const isValid = await validationSchema.isValid(values);
+      if (!isValid) {
+        try {
+          validationSchema.validateSync(values, { abortEarly: false });
+        } catch (errors) {
+          const fieldErrors = {};
+          errors.inner.forEach((error) => {
+            fieldErrors[error.path] = error.message;
+          });
+          formik.setErrors(fieldErrors);
+          return;
+        }
+      }
+      setLoading(true);
+      setError("");
       const response = await sendRequest(
         API_URL + "/users/voter/register",
         "POST",
@@ -87,7 +124,7 @@ const SignUp = ({ navigation }) => {
       );
       if (response?.data?.status == 201) {
         setLoading(false);
-        navigation.navigate("Login")
+        navigation.navigate("Login");
         resetForm();
       } else {
         return setError(
@@ -100,6 +137,10 @@ const SignUp = ({ navigation }) => {
     }
   };
 
+  const isAnyFieldEmpty = fields.some(
+    (field) => field.required && !values[field.value]
+  );
+
   return (
     <View style={tw`h-[100%] bg-white justify-end items-center`}>
       <SafeAreaView style={tw`h-[85%] w-full bg-white`}>
@@ -107,11 +148,16 @@ const SignUp = ({ navigation }) => {
           <View>
             <View style={tw`w-full`}>
               <Text
-                style={tw`text-[#2272C3] text-center font-extrabold text-xl`}
+                style={[
+                  styles.textBold,
+                  tw`text-[#2272C3] font-bold text-2xl text-center`,
+                ]}
               >
-                NEC Voting System
+                Welcome to NEC Voting System
               </Text>
-              <Text style={tw`text-[#cccbca] text-center text-xl`}>
+              <Text
+                style={[styles.text, tw`text-[#b5b4b3] text-center text-xl`]}
+              >
                 Register
               </Text>
             </View>
@@ -126,6 +172,7 @@ const SignUp = ({ navigation }) => {
                     key={index}
                     onPress={() => {}}
                     activeOpacity={0.8}
+                    style={tw`py-2`}
                   >
                     <Input
                       Icon={field.icon}
@@ -154,6 +201,7 @@ const SignUp = ({ navigation }) => {
                     mode={"contained"}
                     style={tw`w-full p-[10] mt-4`}
                     onPress={handleSubmit}
+                    disabled={isAnyFieldEmpty || loading || !formik.isValid}
                   >
                     {loading ? "Registering..." : "Register"}
                   </Button>
@@ -162,8 +210,13 @@ const SignUp = ({ navigation }) => {
                     onPress={() => navigation.navigate("Login")}
                   >
                     <View style={tw`mt-4`}>
-                      <Text style={tw`text-base underline text-gray-500`}>
-                        Have an account? Login
+                      <Text
+                        style={[
+                          styles.text,
+                          tw`text-base underline text-gray-500`,
+                        ]}
+                      >
+                        Already have an account? Login
                       </Text>
                     </View>
                   </TouchableOpacity>
@@ -176,5 +229,12 @@ const SignUp = ({ navigation }) => {
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: "Poppins-Regular",
+  },
+  textBold: {
+    fontFamily: "Poppins-Bold",
+  },
+});
 export default SignUp;

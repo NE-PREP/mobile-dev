@@ -5,6 +5,7 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import * as Yup from "yup";
@@ -28,12 +29,14 @@ const Login = ({ navigation }) => {
       value: "email",
       secure: false,
       type: "email-address",
+      required: true,
     },
     {
       icon: <Feather name="lock" size={24} color="silver" />,
       placeholder: "Password",
       value: "password",
       secure: true,
+      required: true,
     },
   ];
 
@@ -56,9 +59,22 @@ const Login = ({ navigation }) => {
     formik;
 
   const handleSubmit = async () => {
-    setLoading(true);
-    setError("");
     try {
+      const isValid = await validationSchema.isValid(values);
+      if (!isValid) {
+        try {
+          validationSchema.validateSync(values, { abortEarly: false });
+        } catch (errors) {
+          const fieldErrors = {};
+          errors.inner.forEach((error) => {
+            fieldErrors[error.path] = error.message;
+          });
+          formik.setErrors(fieldErrors);
+          return;
+        }
+      }
+      setLoading(true);
+      setError("");
       const response = await sendRequest(
         API_URL + "/users/login",
         "POST",
@@ -67,7 +83,7 @@ const Login = ({ navigation }) => {
       if (response?.data?.status == 200) {
         setLoading(false);
         const token = response?.data?.data?.access_token;
-        
+
         // Decode the JWT token
         const decodedToken = jwt_decode(token);
         const role = decodedToken?.role;
@@ -90,6 +106,10 @@ const Login = ({ navigation }) => {
     }
   };
 
+  const isAnyFieldEmpty = fields.some(
+    (field) => field.required && !values[field.value]
+  );
+
   return (
     <View style={tw`h-[100%] bg-white justify-end items-center`}>
       <SafeAreaView style={tw`h-[85%] w-full bg-white`}>
@@ -97,15 +117,18 @@ const Login = ({ navigation }) => {
           <View>
             <View style={tw`w-full`}>
               <Text
-                style={tw`text-[#2272C3] text-center font-extrabold text-xl`}
+                style={[
+                  styles.textBold,
+                  tw`text-[#2272C3] font-bold text-2xl text-center`,
+                ]}
               >
-                NEC Voting System
+                Welcome to NEC Voting System
               </Text>
-              <Text style={tw`text-[#cccbca] text-center text-xl`}>Login</Text>
+              <Text style={[styles.text,tw`text-[#b5b4b3] text-center text-xl`]}>Login</Text>
             </View>
 
             {error.length > 0 && (
-              <Text style={tw`mt-4 text-red-500 text-center`}>{error}</Text>
+              <Text style={[styles.text,tw`mt-4 text-red-500 text-center`]}>{error}</Text>
             )}
             <View style={tw`mt-8`}>
               <View style={tw`px-6 py-2`}>
@@ -114,6 +137,7 @@ const Login = ({ navigation }) => {
                     key={index}
                     onPress={() => {}}
                     activeOpacity={0.8}
+                    style={tw`py-2`}
                   >
                     <Input
                       Icon={field.icon}
@@ -140,8 +164,9 @@ const Login = ({ navigation }) => {
                 <View style={tw`mt-8`}>
                   <Button
                     mode={"contained"}
-                    style={tw`w-full p-[10] mt-4`}
+                    style={[styles.text,tw`w-full p-[10] mt-4 text-2xl`]}
                     onPress={handleSubmit}
+                    disabled={isAnyFieldEmpty || loading || !formik.isValid}
                   >
                     {loading ? "Logging in..." : "Login"}
                   </Button>
@@ -150,7 +175,7 @@ const Login = ({ navigation }) => {
                     onPress={() => navigation.navigate("Register")}
                   >
                     <View style={tw`mt-4`}>
-                      <Text style={tw`text-base underline text-gray-500`}>
+                      <Text style={[styles.text,tw`text-base underline text-gray-500`]}>
                         Don&rsquo;t have an account? Register
                       </Text>
                     </View>
@@ -165,4 +190,12 @@ const Login = ({ navigation }) => {
   );
 };
 
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: "Poppins-Regular",
+  },
+  textBold: {
+    fontFamily: "Poppins-Bold",
+  },
+});
 export default Login;
