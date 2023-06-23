@@ -55,25 +55,30 @@ export const getTokensByMeterNumber = async (req, res) => {
 
 export const purchaseAToken = async (req, res) => {
   try {
-    const {
-      amount,
-      meter_number
-    } = req.body;
+    const { amount, meter_number } = req.body;
 
-    if (amount < 100) return errorResponse("Amount should be greater than or equal to 100 RWF", res);
+    if (amount < 100) {
+      return errorResponse("Amount should be greater than or equal to 100 RWF", res);
+    }
+
+    if (amount % 100 !== 0) {
+      return errorResponse("Amount should be a multiple of 100 RWF", res);
+    }
 
     const token = generateUniqueToken(meter_number);
 
     const tokenValueDays = Math.floor(amount / 100);
 
-    if (tokenValueDays > 365 * 5) return errorResponse("Token duration cannot exceed 5 years", res);
+    if (tokenValueDays > 365 * 5) {
+      return errorResponse("Token duration cannot exceed 5 years", res);
+    }
 
     const purchasedToken = new PurchasedToken({
       meter_number,
       token,
       token_status: "NEW",
       token_value_days: tokenValueDays,
-      amount
+      amount,
     });
 
     await purchasedToken.save();
@@ -83,6 +88,7 @@ export const purchaseAToken = async (req, res) => {
     return serverErrorResponse(ex, res);
   }
 };
+
 
 
 function generateUniqueToken(meterNumber) {

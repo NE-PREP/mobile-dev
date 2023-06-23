@@ -9,6 +9,8 @@ import { loadFonts } from "./src/utils/FontLoader";
 import Validate from "./src/screens/app/validate";
 import Tokens from "./src/screens/app/tokens";
 
+
+
 const Tab = createBottomTabNavigator();
 
 function TabBarIcon({ focused, color, size, route }) {
