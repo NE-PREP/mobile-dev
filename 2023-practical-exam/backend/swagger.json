@@ -1,0 +1,143 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A system that helps EUCL Clients to purchase electricity.\n\nMade with ❤️ by Nkubito Pacis",
+        "title": "EUCL Prepaid Token Generating System",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Nkubito Pacis",
+            "email": "pacisnkubito@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "tags": [{
+        "name": "PURCHASED-TOKENS OPERATIONS",
+        "description": "Operations on purchased-tokens"
+    }],
+    "security": [{
+        "Bearer": []
+    }],
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "auth-token",
+            "in": "header",
+            "bearerFormat": "JWT",
+            "scheme": "bearer"
+        }
+    },
+    "paths": {
+        "/purchased-tokens/new": {
+            "post": {
+                "tags": [
+                    "PURCHASED-TOKENS OPERATIONS"
+                ],
+                "summary": "Purchase a token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "type": "object",
+                    "consumes": "application/json",
+                    "properties": {
+                        "amount": {
+                            "type": "number",
+                            "required": "true"
+                        },
+                        "meter_number": {
+                            "type": "string",
+                            "required": "true"
+                        }
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/purchased-tokens/by-meter-number/{meter_number}": {
+            "get": {
+                "tags": [
+                    "PURCHASED-TOKENS OPERATIONS"
+                ],
+                "summary": "Get tokens by meter number",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                    "in": "path",
+                    "name": "meter_number",
+                    "type": "string",
+                    "required": "true"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/purchased-tokens/validate/{token}": {
+            "get": {
+                "tags": [
+                    "PURCHASED-TOKENS OPERATIONS"
+                ],
+                "summary": "Validate a token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [{
+                    "in": "path",
+                    "name": "token",
+                    "type": "string",
+                    "required": "true"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    }
+}

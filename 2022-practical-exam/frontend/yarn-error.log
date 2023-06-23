@@ -1,30 +1,20 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarnpkg add react-native-purgecss postcss postcss-cli
+  C:\Program Files\nodejs\node.exe C:\Users\Administrator\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
 
 PATH: 
-  /Users/pacis/Documents/NE-Prep/Practicals/mobile-dev/2022-practical-exam/frontend/node_modules/.bin:/Users/pacis/Documents/NE-Prep/Practicals/mobile-dev/2022-practical-exam/node_modules/.bin:/Users/pacis/Documents/NE-Prep/Practicals/mobile-dev/node_modules/.bin:/Users/pacis/Documents/NE-Prep/Practicals/node_modules/.bin:/Users/pacis/Documents/NE-Prep/node_modules/.bin:/Users/pacis/Documents/node_modules/.bin:/Users/pacis/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/usr/local/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/Users/pacis/Documents/NE-Prep/Practicals/mobile-dev/2022-practical-exam/frontend/node_modules/.bin:/usr/local/Cellar/php/7.4.17/bin:/usr/local/Cellar/php/7.4.17/bin:/Users/pacis/.rbenv/shims:/opt/local/bin:/opt/local/sbin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/pacis/flutter/bin
+  D:\WINDOWS.X64_193000_db_home_4\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Java\jdk-19\bin;C:\Program Files\jdk\jre\bin;C:\Program Files\Apache Software Foundation\Tomcat 9.0\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\15\bin;C:\MinGW\bin;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;C:\Users\Administrator\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Administrator\AppData\Roaming\npm;C:\Users\Administrator\AppData\Local\GitHubDesktop\bin
 
 Yarn version: 
   1.22.19
 
 Node version: 
-  18.0.0
+  18.12.1
 
 Platform: 
-  darwin arm64
+  win32 x64
 
 Trace: 
-  Error: https://registry.npmjs.org/react-native-purgecss: Not found
-      at params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66145:18)
-      at self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140890:22)
-      at Request.emit (node:events:527:28)
-      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141862:10)
-      at Request.emit (node:events:527:28)
-      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141784:12)
-      at Object.onceWrapper (node:events:641:28)
-      at IncomingMessage.emit (node:events:539:35)
-      at endReadableNT (node:internal/streams/readable:1344:12)
-      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+  Error: EPERM: operation not permitted, unlink 'C:\Users\Administrator\AppData\Local\Yarn\Cache\v6\npm-raw-body-2.5.2-99febd83b90e08975087e8f1f9419a149366b68a-integrity\node_modules\raw-body\.yarn-tarball.tgz'
 
 npm manifest: 
   {
